@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 urlpatterns = [
     path('', views.index, name='index'),    # New line as per tutorial
+    path('books/', views.BookListView.as_view(), name='books'),
+    path('book/<int:pk>', views.BookDetailView.as_view(), name='book-detail'),
+    path('authors/', views.AuthorListView.as_view(), name='authors'),
 ]
 
 # New lines below to serve static files in debug mode
