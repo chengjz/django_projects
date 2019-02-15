@@ -44,11 +44,15 @@ class AuthorListView(generic.ListView):
 class BookDetailView(generic.DetailView):
     model = Book
 
+class AuthorDetailView(generic.DetailView):
+    model = Author
+
 # from django.views import generic
 # from django.shortcuts import get_object_or_404
 
 # class BookListView(generic.ListView):
 #     model = Book
+#     paginate_by = 5
 #     context_object_name = 'my_book_list'   # your own name for the list as a template variable
 #     queryset = Book.objects.filter(title__icontains='war')[:5] # Get 5 books containing the title war
 #     template_name = 'books/my_arbitrary_template_name_list.html'  # Specify your own template name/location
@@ -134,3 +138,21 @@ def renew_book_librarian(request, pk):
     }
 
     return render(request, 'catalog/book_renew_librarian.html', context)
+
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+
+from catalog.models import Author
+
+class AuthorCreate(LoginRequiredMixin, CreateView):
+    model = Author
+    fields = '__all__'
+    initial = {'date_of_death': '05/01/2018'}
+
+class AuthorUpdate(LoginRequiredMixin, UpdateView):
+    model = Author
+    fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
+
+class AuthorDelete(LoginRequiredMixin, DeleteView):
+    model = Author
+    success_url = reverse_lazy('authors')
