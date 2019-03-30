@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cats.apps.CatsConfig',
     'citys.apps.CitysConfig',
     'unesco.apps.UnescoConfig',
+    'adlist.apps.UnescoConfig',
 ]
 
 MIDDLEWARE = [
