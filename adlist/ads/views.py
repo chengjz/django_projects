@@ -5,26 +5,26 @@ from django.views import View
 from django.views import generic
 from django.shortcuts import render
 
-from ads.util import AdsListView, AdsDetailView, AdsCreateView, AdsUpdateView, AdsDeleteView
+from ads.util import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-class AdListView(AdsListView):
+class AdListView(OwnerListView):
     model = Ad
-    template_name = "ad_list.html"
+    template_name = "article_list.html"
 
-class AdDetailView(AdsDetailView):
+class AdDetailView(OwnerDetailView):
     model = Ad
-    template_name = "ad_detail.html"
+    template_name = "article_detail.html"
 
-class AdCreateView(AdsCreateView):
+class AdCreateView(OwnerCreateView):
     model = Ad
-    fields = ['title', 'price', 'text']
-    template_name = "ad_form.html"
+    fields = ['title','price', 'text']
+    template_name = "article_form.html"
 
-class AdUpdateView(AdsUpdateView):
+class AdUpdateView(OwnerUpdateView):
     model = Ad
-    fields = ['title', 'price', 'text']
-    template_name = "ad_form.html"
+    fields = ['title','price', 'text']
+    template_name = "article_form.html"
 
-class AdDeleteView(AdsDeleteView):
+class AdDeleteView(OwnerDeleteView):
     model = Ad
-    template_name = "ad_delete.html"
+    template_name = "article_delete.html"

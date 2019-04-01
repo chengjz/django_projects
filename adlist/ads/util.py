@@ -3,30 +3,30 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-class AdsListView(ListView):
+class OwnerListView(ListView):
     """
     Sub-class the ListView to pass the request to the form.
     """
 
-class AdsDetailView(DetailView):
+class OwnerDetailView(DetailView):
     """
     Sub-class the DetailView to pass the request to the form.
     """
 
-class AdsCreateView(LoginRequiredMixin, CreateView):
+class OwnerCreateView(LoginRequiredMixin, CreateView):
     """
     Sub-class of the CreateView to automatically pass the Request to the Form
-    and add the Ad to the saved object.
+    and add the owner to the saved object.
     """
 
     def form_valid(self, form):
         print('form_valid called')
         object = form.save(commit=False)
-        object.Ad = self.request.user
+        object.owner = self.request.user
         object.save()
-        return super(AdsCreateView, self).form_valid(form)
+        return super(OwnerCreateView, self).form_valid(form)
 
-class AdsUpdateView(LoginRequiredMixin, UpdateView):
+class OwnerUpdateView(LoginRequiredMixin, UpdateView):
     """
     Sub-class the UpdateView to pass the request to the form and limit the
     queryset to the requesting user.
@@ -35,10 +35,10 @@ class AdsUpdateView(LoginRequiredMixin, UpdateView):
     def get_queryset(self):
         print('update get_queryset called')
         """ Limit a User to only modifying their own data. """
-        qs = super(AdsUpdateView, self).get_queryset()
+        qs = super(OwnerUpdateView, self).get_queryset()
         return qs.filter(owner=self.request.user)
 
-class AdsDeleteView(LoginRequiredMixin, DeleteView):
+class OwnerDeleteView(LoginRequiredMixin, DeleteView):
     """
     Sub-class the DeleteView to restrict a User from deleting other
     user's data.
@@ -46,7 +46,7 @@ class AdsDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         print('delete get_queryset called')
-        qs = super(AdsDeleteView, self).get_queryset()
+        qs = super(OwnerDeleteView, self).get_queryset()
         return qs.filter(owner=self.request.user)
 
 # References
