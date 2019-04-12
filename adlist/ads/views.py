@@ -130,35 +130,46 @@ class CommentDeleteView(OwnerDeleteView):
         ad = self.object.ad
         return reverse_lazy('ad_detail', args=[ad.id])
 
-# Another way to do it.
-# This will handle create and update with an optional pk parameter on get and post
-# We don't use the Generic or OwnerGeneric because (a) we need a form with a file
-# and (b) we need to to populate the model with request.FILES
-# class AdFormView(LoginRequiredMixin, View):
-#     template = 'ads/form.html'
-#     success_url = reverse_lazy('ads')
-#     def get(self, request, pk=None) :
-#         if not pk :
-#             form = CreateForm()
-#         else:
-#             pic = get_object_or_404(Pic, id=pk, owner=self.request.user)
-#             form = CreateForm(instance=pic)
-#         ctx = { 'form': form }
-#         return render(request, self.template, ctx)
-#
-#     def post(self, request, pk=None) :
-#         if not pk:
-#             form = CreateForm(request.POST, request.FILES or None)
-#         else:
-#             pic = get_object_or_404(Pic, id=pk, owner=self.request.user)
-#             form = CreateForm(request.POST, request.FILES or None, instance=pic)
-#
-#         if not form.is_valid() :
-#             ctx = {'form' : form}
-#             return render(request, self.template, ctx)
-#
-#         # Adjust the model owner before saving
-#         pic = form.save(commit=False)
-#         pic.owner = self.request.user
-#         pic.save()
-#         return redirect(self.success_url)
+
+class ThingListView(OwnerListView):
+    model = Ad
+    template_name = "ad_list.html"
+
+    def get(self, request) :
+        thing_list = Ad.objects.all()
+        favorites = list()
+        if request.user.is_authenticated:
+            # rows = [{'id': 2}]  (A list of rows)
+            rows = request.user.favorite_things.values('id')
+            favorites = [ row['id'] for row in rows ]
+        ctx = {'thing_list' : thing_list, 'favorites': favorites}
+        return render(request, self.template_name, ctx)
+
+# https://stackoverflow.com/questions/16458166/how-to-disable-djangos-csrf-validation
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.db.utils import IntegrityError
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AddFavoriteView(LoginRequiredMixin, View):
+    def post(self, request, pk) :
+        print("Add PK",pk)
+        t = get_object_or_404(Ad, id=pk)
+        fav = Fav(user=request.user, thing=t)
+        try:
+            fav.save()  # In case of duplicate key
+        except IntegrityError as e:
+            pass
+        return HttpResponse()
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteFavoriteView(LoginRequiredMixin, View):
+    def post(self, request, pk) :
+        print("Delete PK",pk)
+        t = get_object_or_404(Ad, id=pk)
+        try:
+            fav = Fav.objects.get(user=request.user, thing=t).delete()
+        except Fav.DoesNotExist as e:
+            pass
+
+        return HttpResponse()
