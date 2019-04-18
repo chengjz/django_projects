@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'rest_framework',  # Add
     'social_django',  # Add
     'home.apps.HomeConfig',
-    'ads.apps.AdsConfig',  # Add - Common folder
+    # 'ads.apps.AdsConfig',  # Add - Common folder
+    'autos.apps.AutosConfig',
 
 ]
 
