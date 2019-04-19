@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'social_django',  # Add
     'home.apps.HomeConfig',
     # 'ads.apps.AdsConfig',  # Add - Common folder
-    'autos.apps.AutosConfig',
+    # 'autos.apps.AutosConfig',
+    'horses.apps.HorsesConfig',
 
 ]
 

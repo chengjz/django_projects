@@ -1,0 +1,31 @@
+{% extends "base_menu.html" %}
+{% block content %}
+<h1>Horses</h1>
+<p>
+{% if horse_list %}
+<ul>
+  {% for horse in horse_list %}
+
+  <li>
+    <a href="{% url 'horse_detail'  horse.id %}">{{ horse.name }}</a>
+    {% if horse.owner_id == user.id %}
+    (<a href="{% url 'horse_update' horse.id %}">Edit</a> |
+    <a href="{% url 'horse_delete' horse.id %}">Delete</a>)
+    {% endif %}
+</li>
+  {% endfor %}
+</ul>
+{% else %}
+  <p>There are no horses in the database.</p>
+{% endif %}
+</p>
+<p>
+<a href="{% url 'horses_create' %}"> Add an Horse</a> |
+{% if user.is_authenticated %}
+<a href="{% url 'logout' %}?next={% url 'horses' %}">Logout</a>
+{% else %}
+<a href="{% url 'login' %}?next={% url 'horses' %}">Login</a>
+{% endif %}
+</p>
+
+{% endblock %}

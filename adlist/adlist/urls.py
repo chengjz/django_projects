@@ -21,11 +21,12 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', include('autos.urls')),
+    path('', include('horses.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     url(r'^oauth/', include('social_django.urls', namespace='social')),
-    path('autos/', include('autos.urls')),
+    # path('autos/', include('autos.urls')),
+    path('horses/', include('horses.urls')),
 ]
 
 
